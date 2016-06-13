@@ -1,0 +1,27 @@
+{
+  "name": "socketio-prac-with-react-and-mongo",
+  "authors": [
+    "genxium"
+  ],
+  "description": "This is a an entry-level practice project.",
+  "main": "index.js",
+  "keywords": [
+    "node",
+    "socket.io",
+    "react",
+    "mongodb"
+  ],
+  "license": "MIT",
+  "homepage": "",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "react": "^15.1.0"
+  }
+}
