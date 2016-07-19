@@ -22,6 +22,23 @@
 		color: white;
 		text-align: center;
 	}
+	#add {
+		position: absolute;
+		right: 0;
+		bottom: 500px;
+	}
+	body {
+		background: none;
+	}
+	#header_wrap {
+		opacity: .7;
+	}
+	#footer_wrap {
+		opacity: .7;
+	}
+	#main_content_wrap {
+		opacity: .9;
+	}
     </style>
 
     <title>My Note Book</title>
@@ -60,19 +77,20 @@
       </footer>
     </div>
 
+	<button id="add">ADD</button>
     
 
   </body>
   <script type='text/javascript'>
-	  var ref = new Wilddog("https://wild-boar-92305.wilddogio.com");
+	  var ref = new Wilddog("https://wild-boar-92305.wilddogio.com/article");
 	  //ref.child('test_sync').set("hello world");
 
 	
 	  var wrapper = $("#main_content");
 	  function onValue() {
 		ref.on("value", function(snapshot) {
-		    var article = snapshot.val().article;
-		    for (var k = 0; k < article.length; k++) {
+		    var article = snapshot.val();
+		    for (var k in article) {
 			  var title = $('<p>', {
 					'class': 'single-content-title'
 			  }).appendTo(wrapper);
@@ -88,6 +106,15 @@
 		    }
 		});
 	  }
+
+	var addBtn = $('#add');
+	addBtn.on('click', function(){
+		ref.push({
+			'title': '++++++++',
+			'time': '2016-07-19',
+			'content': '++_+_+_+_+_+_+_+_+!!!!'
+		})
+	});
 	
 	  window.onload = onValue();
         
