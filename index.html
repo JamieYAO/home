@@ -8,6 +8,10 @@
 
     <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
     <style>
+	html {
+		background: url(http://hbfile.b0.upaiyun.com/img/home/banner/6379c260e25b6a60a45c889d9d6481b0c837bee9d0dd2);
+		background-attachment: fixed;
+	}
 	.single-content {
 		border-bottom: 1px solid gray;
 	}
@@ -42,6 +46,8 @@
 		<p>7.15</p>
 		<p>啊，时间都去哪了，今天工作任务要先了解socket.io的群组监听发射事件，然后设计mongodb储存一个参考数给前端拉取数据。昨晚超级无敌困，直接就睡着了，都没空看书！！！</p>
 	</div>
+	<div class="single-content" id="id">
+	</div>
       </section>
     </div>
 
@@ -56,4 +62,21 @@
     
 
   </body>
+  <script type='text/javascript'>
+	  //var ref = new Wilddog("https://wild-boar-92305.wilddogio.com");
+	  //ref.child('test_sync').set("hello world");
+
+	
+	  var tx = document.getElementById("tx");
+	  function onValue() {
+		var appId = document.getElementById("appId").value;
+		var url = "https://" +appId+ ".wilddogio.com";
+		var ref = new Wilddog(url);
+		ref.on("value", function(snapshot) {
+		    console.log(snapshot.val());
+		    tx.innerHTML = JSON.stringify(snapshot.val(), null, '\t');
+		});
+	  }
+        
+  </script>
 </html>
