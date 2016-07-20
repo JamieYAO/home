@@ -7,8 +7,19 @@
     <meta name="description" content="Home : my index">
 
     <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
+
+    <script src="javascripts/node_modules/jquery/dist/jquery.min.js"></script>
+    <script src="javascripts/node_modules/react/dist/react.js"></script>
+    <script src="javascripts/node_modules/react-dom/dist/react-dom.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.23/browser.min.js"></script>
     <script src="https://cdn.wilddog.com/js/client/current/wilddog.js"></script>
+<!--
     <script src="http://code.jquery.com/jquery-1.11.1.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/15.0.1/react.js"></script> 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/15.0.1/react-dom.js"></script> 
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/marked/0.3.2/marked.min.js"></script>
+-->
 
     <style>
 	html {
@@ -25,7 +36,7 @@
 	#add {
 		position: absolute;
 		right: 0;
-		bottom: 500px;
+		top: 0;
 	}
 	body {
 		background: none;
@@ -39,6 +50,14 @@
 	#main_content_wrap {
 		opacity: .9;
 	}
+	#input-wrapper {
+	}
+	.none {
+		display: none;
+	}
+	.block {
+		display: block;
+	}
     </style>
 
     <title>My Note Book</title>
@@ -51,21 +70,13 @@
         <header class="inner">
           <a id="forkme_banner" href="https://github.com/JamieYAO/home">View on GitHub</a>
         </header>
-	<p id="motto">有句话特别好：当我坐下来开始写作（码代码）的时候，我不会去问自己，“我要说点什么呢？”而是问自己，“我想要弄清楚什么呢？”</p>
+	<div id="motto">有句话特别好：当我坐下来开始写作（码代码）的时候，我不会去问自己，“我要说点什么呢？”而是问自己，“我想要弄清楚什么呢？”</div>
     </div>
 
     <!-- MAIN CONTENT -->
     <div id="main_content_wrap" class="outer">
       <section id="main_content" class="inner">
-	<div class="single-content">
-		<p>7.14</p>
-		<p>今天先弄出来，做我的考研笔记！</p>
-		<p>突然想到，要是我考上了研究生，然后不去读，写在简历上应该挺牛B的...</p>
-	</div>
-	<div class="single-content">
-		<p>7.15</p>
-		<p>啊，时间都去哪了，今天工作任务要先了解socket.io的群组监听发射事件，然后设计mongodb储存一个参考数给前端拉取数据。昨晚超级无敌困，直接就睡着了，都没空看书！！！</p>
-	</div>
+
       </section>
     </div>
 
@@ -77,46 +88,135 @@
       </footer>
     </div>
 
-	<button id="add">ADD</button>
-    
-
   </body>
-  <script type='text/javascript'>
-	  var ref = new Wilddog("https://wild-boar-92305.wilddogio.com/article");
-	  //ref.child('test_sync').set("hello world");
 
-	
-	  var wrapper = $("#main_content");
-	  function onValue() {
-		ref.on("value", function(snapshot) {
-		    var article = snapshot.val();
-		    for (var k in article) {
-			  var title = $('<p>', {
-					'class': 'single-content-title'
-			  }).appendTo(wrapper);
-			title.text(article[k].title);
-			  var time = $('<p>', {
-					'class': 'single-content-time'
-			  }).appendTo(wrapper);
-			time.text(article[k].time);
-			  var content = $('<div>', {
-					'class': 'single-content'
-			  }).appendTo(wrapper);
-			content.text(article[k].content);
-		    }
-		});
-	  }
+  <script type='text/babel'>
+	var ref = new Wilddog("https://wild-boar-92305.wilddogio.com/article");
+	//ref.child('test_sync').set("hello world");
 
-	var addBtn = $('#add');
-	addBtn.on('click', function(){
-		ref.push({
-			'title': '++++++++',
-			'time': '2016-07-19',
-			'content': '++_+_+_+_+_+_+_+_+!!!!'
-		})
+	var AddWrapper = React.createClass({
+		getInitialState: function() {
+			return {
+				isShowInput: false,
+				opacity: 1.0
+			};
+		},
+		componentDidMount: function () {
+			var timer = function() {
+				this.timer = setInterval(function () {
+					var opacity = this.state.opacity;
+					opacity -= .05;
+					if (opacity < 0.1) {
+						clearInterval(this.timer)
+						timerUp();
+					}
+					this.setState({
+						opacity: opacity
+					});
+				}.bind(this), 100);
+			}.bind(this)
+			var timerUp = function() {
+				this.timerUp = setInterval(function () {
+					var opacity = this.state.opacity;
+					opacity += .05;
+					if (opacity > 1.0) {
+						clearInterval(this.timerUp)
+						timer();
+					}
+					this.setState({
+						opacity: opacity
+					});
+				}.bind(this), 100);
+			}.bind(this)
+			timer();
+		},
+		handlerAdd: function(e) {
+			this.setState({
+				isShowInput: !this.state.isShowInput
+			})
+		},
+		handlerComfirm: function(e) {
+			var currentTime = new Date().getTime();
+			var title = this.refs.title.value;
+			var content = this.refs.content.value;
+			ref.push({
+				'title': title,
+				'time': currentTime,
+				'content': content
+			});
+			this.handlerAdd();
+		},
+		render: function() {
+			var display;
+			if (this.state.isShowInput) {
+				display = "block"
+			} else {
+				display = "none"
+			}
+			return  <div id="add">
+					<button id="add-btn" onClick={this.handlerAdd} style={{float: 'right', opacity: this.state.opacity}}>ADD</button>
+					<div id="input-wrapper" className={display}>
+						<input id="title" placeholder="title" ref="title"></input>
+						<input id="content" placeholder="content" ref="content"></input>
+						<button id="add-btn" onClick={this.handlerComfirm}>Comfirm</button>
+					</div>
+				</div>
+		}
 	});
 	
-	  window.onload = onValue();
+	var Article = React.createClass({
+		render: function() {
+			return <div className="single-content">
+					<p>{this.props.data.title}</p>
+					<p>{this.props.data.time}</p>
+					<p>{this.props.data.content}</p>
+				</div>
+		}
+	});
+
+	var ArticleWrapper = React.createClass({
+		getInitialState: function() {
+			return {
+				data: {},
+				loaded: false
+			};
+		},
+		componentDidMount() {
+			this.fetchData();
+		},
+		fetchData: function() {
+			ref.orderByChild('time').on("value", function(snapshot) {
+				this.setState({
+					data: snapshot.val(),
+					loaded: true
+				})
+			}.bind(this))		
+		},
+		render: function() {
+
+			if (!this.state.loaded) {
+				return (
+					React.createElement('h1', {className: "loading-hint"}, 'Loading ...')
+				       );
+			}
+
+			var rows = [];
+
+			for(var k in this.state.data) {
+				rows.push(React.createElement(Article, {data : this.state.data[k]}));
+			}
+
+			
+			return 	<div>
+					{rows}
+					<AddWrapper />
+				</div>;
+		}
+	});
+	ReactDOM.render(
+		<ArticleWrapper />,
+		document.getElementById('main_content')
+	);
         
   </script>
 </html>
