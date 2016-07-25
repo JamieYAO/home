@@ -105,7 +105,7 @@
 			var timer = function() {
 				this.timer = setInterval(function () {
 					var opacity = this.state.opacity;
-					opacity -= .05;
+					opacity -= .1;
 					if (opacity < 0.1) {
 						clearInterval(this.timer)
 						timerUp();
@@ -118,7 +118,7 @@
 			var timerUp = function() {
 				this.timerUp = setInterval(function () {
 					var opacity = this.state.opacity;
-					opacity += .05;
+					opacity += .1;
 					if (opacity > 1.0) {
 						clearInterval(this.timerUp)
 						timer();
@@ -144,6 +144,8 @@
 				'time': currentTime,
 				'content': content
 			});
+			this.refs.title.value = "";
+			this.refs.content.value = "";
 			this.handlerAdd();
 		},
 		render: function() {
