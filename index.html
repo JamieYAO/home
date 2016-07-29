@@ -93,6 +93,7 @@
   <script type='text/babel'>
 	var ref = new Wilddog("https://wild-boar-92305.wilddogio.com/article");
 	//ref.child('test_sync').set("hello world");
+	var g_target;
 
 	var AddWrapper = React.createClass({
 		getInitialState: function() {
@@ -167,11 +168,19 @@
 	});
 	
 	var Article = React.createClass({
+		handlerRemove: function(e) {
+			console.log(this.props.id_key);
+			var url = "https://wild-boar-92305.wilddogio.com/article/" + this.props.id_key;
+			console.log(url);
+			var refRemove = new Wilddog(url);
+			refRemove.set(null);
+		},
 		render: function() {
 			return <div className="single-content">
 					<p>{this.props.data.title}</p>
 					<p>{this.props.data.time}</p>
 					<p>{this.props.data.content}</p>
+					<button onClick={this.handlerRemove}> X </button>
 				</div>
 		}
 	});
@@ -205,7 +214,7 @@
 			var rows = [];
 
 			for(var k in this.state.data) {
-				rows.push(React.createElement(Article, {data : this.state.data[k]}));
+				rows.push(React.createElement(Article, {data : this.state.data[k], id_key: k}));
 			}
 
 			
