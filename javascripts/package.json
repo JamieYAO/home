@@ -1,8 +1,18 @@
 {
-	"dependencies": {
-		"jquery": "*",
-		"react": "*",
-		"react-dom": "*"
-		
-	}
+  "dependencies": {
+    "jquery": "*",
+    "react": "*",
+    "react-dom": "*",
+    "wilddog": "^0.7.2"
+  },
+  "devDependencies": {
+    "webpack": "*",
+    "babel-core": "*",
+    "babel-loader": "*",
+    "babel-plugin-add-module-exports": "*",
+    "babel-preset-es2015": "*",
+    "babel-preset-react": "*",
+    "babel-preset-react-native": "*",
+    "babel-preset-stage-0": "*"
+  }
 }

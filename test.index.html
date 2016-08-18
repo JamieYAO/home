@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta name="description" content="Home : my index">
+
+    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
+
+    <script src="javascripts/node_modules/jquery/dist/jquery.min.js"></script>
+    <script src="javascripts/node_modules/react/dist/react.js"></script>
+    <script src="javascripts/node_modules/react-dom/dist/react-dom.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.23/browser.min.js"></script>
+    <script src="https://cdn.wilddog.com/js/client/current/wilddog.js"></script>
+<!--
+    <script src="http://code.jquery.com/jquery-1.11.1.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/15.0.1/react.js"></script> 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/15.0.1/react-dom.js"></script> 
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/marked/0.3.2/marked.min.js"></script>
+-->
+
+    <style>
+	html {
+		background: url(http://hbfile.b0.upaiyun.com/img/home/banner/6379c260e25b6a60a45c889d9d6481b0c837bee9d0dd2);
+		background-attachment: fixed;
+	}
+	.single-content {
+		border-bottom: 1px solid gray;
+	}
+	#motto {
+		color: white;
+		text-align: center;
+	}
+	#add {
+		position: absolute;
+		right: 0;
+		top: 0;
+	}
+	body {
+		background: none;
+	}
+	#header_wrap {
+		opacity: .7;
+	}
+	#footer_wrap {
+		opacity: .7;
+	}
+	#main_content_wrap {
+		opacity: .9;
+	}
+	#input-wrapper {
+	}
+	.none {
+		display: none;
+	}
+	.block {
+		display: block;
+	}
+    </style>
+
+    <title>My Note Book</title>
+  </head>
+
+  <body>
+
+    <!-- HEADER -->
+    <div id="header_wrap" class="outer">
+        <header class="inner">
+          <a id="forkme_banner" href="https://github.com/JamieYAO/home">View on GitHub</a>
+        </header>
+	<div id="motto">有句话特别好：当我坐下来开始写作（码代码）的时候，我不会去问自己，“我要说点什么呢？”而是问自己，“我想要弄清楚什么呢？”</div>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+      <section id="main_content" class="inner">
+
+      </section>
+      <section id="main_content2" class="inner">
+
+      </section>
+    </div>
+
+    <!-- FOOTER  -->
+    <div id="footer_wrap" class="outer">
+      <footer class="inner">
+        <p class="copyright">Home maintained by <a href="https://github.com/JamieYAO">JamieYAO</a></p>
+        <p>Published with <a href="https://pages.github.com">GitHub Pages</a></p>
+      </footer>
+    </div>
+
+  </body>
+
+  <script type='text/babel'>
+    var Place = class Place extends React.Component{
+        constructor(props){
+            super(props);
+            this.state={};
+            var st;
+            setInterval(t=>{
+                t = Date.now();
+                if(!st) st=t;
+                const fps = Math.round(1e3/(t-st));
+                st = t;
+                this.setState({fps});
+            },16);
+            
+        }    
+        render(){
+            return(
+                <div>
+                    <h3>fps:{this.state.fps}</h3>
+                    <Cir num={this.props.num}/>
+                </div>
+            )
+        }
+    }
+    Place.defaultProps = {num:2333}
+
+class Cir extends React.Component{
+    constructor(props){
+        super(props);
+        this.state = {
+            ar : Array.from({length:this.props.num},(v,i)=>{
+                return {
+                    text:`(/￣ˇ￣)/  ${i}`
+                    ,stys:{margin:`0 0 0 ${Math.cos(i/this.props.num*3)*Math.random()*66}px`}
+                }
+            }) 
+        }
+
+    }
+    shouldComponentUpdate(prop,state){
+	    return JSON.stringify([state])!=JSON.stringify([this.state]);
+    }
+    render(){
+        return(
+            <div>
+                {this.state.ar.map((o,i)=><p key={i} style={o.stys}>{o.text}</p>)}            
+            </div>
+        )
+    }
+}
+
+ReactDOM.render(
+    <Place/>
+    ,document.querySelector('#main_content2')
+) 
+  </script>
+    <script src="web/bin/bundle.js"></script>
+</html>

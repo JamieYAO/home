@@ -1,95 +1,157 @@
-  var ref = new Wilddog("https://wild-boar-92305.wilddogio.com/article");
-  //ref.child('test_sync').set("hello world");
+import React, { Component } from 'react';
+import ReactDOM from 'react-dom';
 
+var ref = new Wilddog("https://wild-boar-92305.wilddogio.com/article");
+//ref.child('test_sync').set("hello world");
+var g_target;
 
-  var wrapper = $("#main_content");
-  function onValue() {
-	ref.on("value", function(snapshot) {
-	    var article = snapshot.val();
-	    for (var k in article) {
-		  var title = $('<p>', {
-				'class': 'single-content-title'
-		  }).appendTo(wrapper);
-		title.text(article[k].title);
-		  var time = $('<p>', {
-				'class': 'single-content-time'
-		  }).appendTo(wrapper);
-		time.text(article[k].time);
-		  var content = $('<div>', {
-				'class': 'single-content'
-		  }).appendTo(wrapper);
-		content.text(article[k].content);
-	    }
-	});
+var AddWrapper = React.createClass({
+  getInitialState: function() {
+    return {
+      isShowInput: false,
+      opacity: 1.0
+    };
+  },
+  componentDidMount: function() {
+    var timer = function() {
+      this.timer = setInterval(function() {
+        var opacity = this.state.opacity;
+        opacity -= .1;
+        if (opacity < 0.1) {
+          clearInterval(this.timer)
+          timerUp();
+        }
+        this.setState({
+          opacity: opacity
+        });
+      }.bind(this), 100);
+    }.bind(this)
+    var timerUp = function() {
+      this.timerUp = setInterval(function() {
+        var opacity = this.state.opacity;
+        opacity += .1;
+        if (opacity > 1.0) {
+          clearInterval(this.timerUp)
+          timer();
+        }
+        this.setState({
+          opacity: opacity
+        });
+      }.bind(this), 100);
+    }.bind(this)
+    timer();
+  },
+  handlerAdd: function(e) {
+    this.setState({
+      isShowInput: !this.state.isShowInput
+    })
+  },
+  handlerComfirm: function(e) {
+    var currentTime = new Date().toLocaleString();
+    var title = this.refs.title.value;
+    var content = this.refs.content.value;
+    ref.push({
+      'title': title,
+      'time': currentTime,
+      'content': content
+    });
+    this.refs.title.value = "";
+    this.refs.content.value = "";
+    this.handlerAdd();
+  },
+  render: function() {
+    var display;
+    if (this.state.isShowInput) {
+      display = "block"
+    } else {
+      display = "none"
+    }
+    return (
+	<div id="add">
+		<button id="add-btn" onClick={this.handlerAdd} style={{
+			float: 'right',
+			opacity: this.state.opacity
+		      }}>ADD</button>
+					<div id="input-wrapper" className={display}>
+						<input id="title" placeholder="title" ref="title"></input>
+						<textarea id="content" placeholder="content" ref="content"></textarea>
+						<button id="add-btn" onClick={this.handlerComfirm}>Comfirm</button>
+					</div>
+				</div>
+	)
   }
-
-var addBtn = $('#add-btn');
-addBtn.on('click', function(){
-
-	$('#input-wrapper').toggle();
-	/*
-	ref.push({
-		'title': '++++++++',
-		'time': '2016-07-19',
-		'content': '++_+_+_+_+_+_+_+_+!!!!'
-	})
-	*/
 });
-
-$(document).ready(function() {
-	onValue();
-})
 
 var Article = React.createClass({
-	render: function() {
-		return <div class="single-content">
-				<p>{this.props.title}</p>
-			</div>
-	}
+  handlerRemove: function(e) {
+    console.log(this.props.id_key);
+    var url = "https://wild-boar-92305.wilddogio.com/article/" + this.props.id_key;
+    console.log(url);
+    var refRemove = new Wilddog(url);
+    refRemove.set(null);
+  },
+  render: function() {
+    return (<div className="single-content">
+					<p>{this.props.data.title}</p>
+					<p>{this.props.data.time}</p>
+					<p>{this.props.data.content}</p>
+					<button onClick={this.handlerRemove}> X </button>
+				</div>
+	)
+  }
 });
 
-var HelloMessage = React.createClass({
-	getInitialState: function() {
-		return {
-			data: {}
-		};
-	},
-	componentDidMount() {
-		this.fetchData();
-	},
-	fetchData: function() {
-		ref.on("value", function(snapshot) {
-			this.setState({
-				data: snapshot.val()
-			})
-		}.bind(this))		
-	},
-	render: function() {
-		var rows = [];
+var ArticleWrapper = React.createClass({
+  getInitialState: function() {
+    return {
+      data: {},
+      loaded: false
+    };
+  },
+  componentDidMount() {
+    this.fetchData();
+  },
+  fetchData: function() {
+    ref.orderByChild('time').on("value", function(snapshot) {
+      this.setState({
+        data: snapshot.val(),
+        loaded: true
+      })
+    }.bind(this))
+  },
+  render: function() {
 
-/*
-		for(var k in this.state.data) {
-			rows.push(React.createElement(Article, {articles : this.state.data[k]}));
-		}
-*/
-		if (!!this.state.data) {
-		console.log(this.state.data);
-			var commentNodes = this.state.data.map(function (comment) {
-					return (
-						<Comment author={comment.title}>
-						{comment.content}
-						</Comment>
-					       );
-					});
-		}
-		
-		return <div>
-			{commentNodes}
-			</div>;
-	}
+    if (!this.state.loaded) {
+      return (
+      React.createElement('h1', {
+        className: "loading-hint"
+      }, 'Loading ...')
+      );
+    }
+
+    var rows = [];
+
+    for (var k in this.state.data) {
+      rows.push(React.createElement(Article, {
+        data: this.state.data[k],
+        id_key: k
+      }));
+    }
+
+
+    return (<div>
+					{rows}
+					<AddWrapper />
+				</div>
+	)
+  }
 });
-ReactDOM.render(
-	<HelloMessage name="John" />,
-	document.getElementById('example')
-);
 
+function main() {
+	ReactDOM.render(
+	  <ArticleWrapper />,
+	  document.getElementById('main_content')
+	);
+}
+
+main();
