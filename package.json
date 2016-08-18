@@ -17,10 +17,6 @@
   },
   "homepage": "https://github.com/JamieYAO/home#readme",
   "dependencies": {
-    "babel-core": "^6.13.2",
-    "babel-loader": "^6.2.4",
-    "babel-preset-es2015": "^6.13.2",
-    "babel-preset-react": "^6.11.1",
     "bowser": "^1.4.4",
     "coffee-loader": "^0.7.2",
     "webpack": "^1.13.1"
