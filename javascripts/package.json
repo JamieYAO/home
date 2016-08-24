@@ -1,17 +1,16 @@
 {
   "dependencies": {
-    "jquery": "*",
-    "react": "*",
-    "react-dom": "*",
-  },
-  "devDependencies": {
-    "webpack": "*",
     "babel-core": "*",
     "babel-loader": "*",
     "babel-plugin-add-module-exports": "*",
     "babel-preset-es2015": "*",
     "babel-preset-react": "*",
     "babel-preset-react-native": "*",
-    "babel-preset-stage-0": "*"
+    "babel-preset-stage-0": "*",
+    "jquery": "*",
+    "react": "*",
+    "react-dom": "*",
+    "react-router": "^2.7.0",
+    "webpack": "*"
   }
 }

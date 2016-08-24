@@ -59,7 +59,6 @@
 	var ref = new Wilddog("https://wild-boar-92305.wilddogio.com/article");
 	//ref.child('test_sync').set("hello world");
 	var g_target;
-
 	var AddWrapper = _react2.default.createClass({
 	  displayName: 'AddWrapper',
 
@@ -69,35 +68,7 @@
 	      opacity: 1.0
 	    };
 	  },
-	  componentDidMount: function componentDidMount() {
-	    var timer = function () {
-	      this.timer = setInterval(function () {
-	        var opacity = this.state.opacity;
-	        opacity -= .1;
-	        if (opacity < 0.1) {
-	          clearInterval(this.timer);
-	          timerUp();
-	        }
-	        this.setState({
-	          opacity: opacity
-	        });
-	      }.bind(this), 100);
-	    }.bind(this);
-	    var timerUp = function () {
-	      this.timerUp = setInterval(function () {
-	        var opacity = this.state.opacity;
-	        opacity += .1;
-	        if (opacity > 1.0) {
-	          clearInterval(this.timerUp);
-	          timer();
-	        }
-	        this.setState({
-	          opacity: opacity
-	        });
-	      }.bind(this), 100);
-	    }.bind(this);
-	    timer();
-	  },
+	  componentDidMount: function componentDidMount() {},
 	  handlerAdd: function handlerAdd(e) {
 	    this.setState({
 	      isShowInput: !this.state.isShowInput
@@ -193,11 +164,21 @@
 	  getInitialState: function getInitialState() {
 	    return {
 	      data: {},
-	      loaded: false
+	      loaded: false,
+	      left: '500'
 	    };
 	  },
 	  componentDidMount: function componentDidMount() {
 	    this.fetchData();
+	    var timer = setInterval(function () {
+	      var left = this.state.left;
+	      left -= 55;
+	      this.setState({ left: left });
+	      if (left < 0) {
+	        this.setState({ left: '0' });
+	        clearInterval(timer);
+	      }
+	    }.bind(this), 10);
 	  },
 
 	  fetchData: function fetchData() {
@@ -227,15 +208,154 @@
 
 	    return _react2.default.createElement(
 	      'div',
-	      null,
+	      { style: { transition: 'all 1s', position: 'relative', left: this.state.left + 'px' } },
 	      rows,
 	      _react2.default.createElement(AddWrapper, null)
 	    );
 	  }
 	});
 
+	var Note = _react2.default.createClass({
+	  displayName: 'Note',
+	  getInitialState: function getInitialState() {
+	    return {
+	      left: '500'
+	    };
+	  },
+	  componentDidMount: function componentDidMount() {
+	    var timer = setInterval(function () {
+	      var left = this.state.left;
+	      left -= 55;
+	      this.setState({ left: left });
+	      if (left < 0) {
+	        this.setState({ left: '0' });
+	        clearInterval(timer);
+	      }
+	    }.bind(this), 10);
+	  },
+
+	  render: function render() {
+	    return _react2.default.createElement(
+	      'div',
+	      { className: 'main-wrapper', style: { transition: 'all 1s', position: 'relative', left: this.state.left + 'px' } },
+	      _react2.default.createElement(
+	        'h1',
+	        null,
+	        'Note'
+	      )
+	    );
+	  }
+	});
+
+	var Main = _react2.default.createClass({
+	  displayName: 'Main',
+	  getInitialState: function getInitialState() {
+	    return {
+	      left: '500'
+	    };
+	  },
+	  componentDidMount: function componentDidMount() {
+	    var timer = setInterval(function () {
+	      var left = this.state.left;
+	      left -= 55;
+	      this.setState({ left: left });
+	      if (left < 0) {
+	        this.setState({ left: '0' });
+	        clearInterval(timer);
+	      }
+	    }.bind(this), 10);
+	  },
+
+	  render: function render() {
+	    return _react2.default.createElement(
+	      'div',
+	      { className: 'note-wrapper', style: { transition: 'all 1s', position: 'relative', left: this.state.left + 'px' } },
+	      _react2.default.createElement(
+	        'h1',
+	        null,
+	        'Main'
+	      )
+	    );
+	  }
+	});
+
+	var SelectBar = _react2.default.createClass({
+	  displayName: 'SelectBar',
+
+	  getInitialState: function getInitialState() {
+	    return {
+	      data: {},
+	      loaded: false,
+	      page: 'Main'
+	    };
+	  },
+	  componentDidMount: function componentDidMount() {
+	    this.setState({
+	      loaded: true
+	    });
+	  },
+	  selectBarClick: function selectBarClick(selector) {
+	    this.setState({
+	      page: selector
+	    });
+	  },
+
+	  render: function render() {
+	    var _this = this;
+
+	    if (!this.state.loaded) {
+	      return _react2.default.createElement(
+	        'h1',
+	        { className: 'loading-hint' },
+	        'Loading'
+	      );
+	    }
+
+	    var pageComponent = void 0;
+	    var page = this.state.page;
+	    switch (page) {
+	      case 'Main':
+	        pageComponent = _react2.default.createElement(Main, null);
+	        break;
+	      case 'Note':
+	        pageComponent = _react2.default.createElement(Note, null);
+	        break;
+	      case 'ArticleWrapper':
+	        pageComponent = _react2.default.createElement(ArticleWrapper, null);
+	        break;
+	    }
+
+	    return _react2.default.createElement(
+	      'div',
+	      { className: 'wrapper', style: { overflow: 'hidden' } },
+	      _react2.default.createElement(
+	        'button',
+	        { onClick: function onClick() {
+	            return _this.selectBarClick('Main');
+	          } },
+	        'Main'
+	      ),
+	      _react2.default.createElement(
+	        'button',
+	        { onClick: function onClick() {
+	            return _this.selectBarClick('Note');
+	          } },
+	        'Note'
+	      ),
+	      _react2.default.createElement(
+	        'button',
+	        { onClick: function onClick() {
+	            return _this.selectBarClick('ArticleWrapper');
+	          } },
+	        'Article'
+	      ),
+	      pageComponent
+	    );
+	  }
+	});
+
 	function main() {
-	  _reactDom2.default.render(_react2.default.createElement(ArticleWrapper, null), document.getElementById('main_content'));
+	  _reactDom2.default.render(_react2.default.createElement(SelectBar, null), document.getElementById('main_content'));
 	}
 
 	main();
