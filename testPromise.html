@@ -17,13 +17,21 @@
         var p1 = new Promise(function (resolve, reject) {
             log.insertAdjacentHTML('beforeend', thisPromiseCount + ') Promise started (<small>Async code started</small>)<br/>');
             window.setTimeout(function () {
-		//resolve(thisPromiseCount);
-		reject(thisPromiseCount + "reason");
+		resolve(thisPromiseCount);
+		//reject(thisPromiseCount + "reason");
             }, Math.random() * 2000 + 1000);
+        });
+	p1.then(function (resolve) {
+	    const resolve1 = resolve;
+	    const p2 = new Promise(function (resolve, reject) {
+		resolve('return p2 给调用者使用(' + resolve1 + ')' )
+	    })
+	    return p2;// 给调用者使用
+            //log.insertAdjacentHTML('beforeend', val + ') Promise fulfilled (<small>Async code terminated</small>)<br/>');
         })
-	.then(function (val) {
-            log.insertAdjacentHTML('beforeend', val + ') Promise fulfilled (<small>Async code terminated</small>)<br/>');
-        })
+	.then(function (p2) {
+            log.insertAdjacentHTML('beforeend', p2 + ') Promise fulfilled (<small>Async code terminated</small>)<br/>');
+	})
 	.catch(function (reason) {
 	    log.insertAdjacentHTML('beforeend', 'Promise rejected ('+reason+')<br/> ');
 	});
