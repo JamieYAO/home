@@ -200,9 +200,10 @@
 	    var rows = [];
 
 	    for (var k in this.state.data) {
-	      rows.push(_react2.default.createElement(Article, {
+	      rows.unshift(_react2.default.createElement(Article, {
 	        data: this.state.data[k],
-	        id_key: k
+	        id_key: k,
+	        key: k
 	      }));
 	    }
 

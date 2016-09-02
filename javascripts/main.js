@@ -11,9 +11,7 @@ var AddWrapper = React.createClass({
       opacity: 1.0
     };
   },
-  componentDidMount: function() {
-
-  },
+  componentDidMount: function() {},
   handlerAdd: function(e) {
     this.setState({
       isShowInput: !this.state.isShowInput
@@ -79,20 +77,24 @@ var ArticleWrapper = React.createClass({
     return {
       data: {},
       loaded: false,
-	left: '500'
+      left: '500'
     };
   },
   componentDidMount() {
     this.fetchData();
-	const timer = setInterval(function() {
-		let left = this.state.left;		
-		left -= 55;
-		this.setState({ left: left })
-		if (left < 0) { 
-			this.setState({ left: '0' })
-			clearInterval(timer)
-		}
-	}.bind(this), 10)
+    const timer = setInterval(function() {
+      let left = this.state.left;
+      left -= 55;
+      this.setState({
+        left: left
+      })
+      if (left < 0) {
+        this.setState({
+          left: '0'
+        })
+        clearInterval(timer)
+      }
+    }.bind(this), 10)
   },
   fetchData: function() {
     ref.orderByChild('time').on("value", function(snapshot) {
@@ -115,14 +117,21 @@ var ArticleWrapper = React.createClass({
     var rows = [];
 
     for (var k in this.state.data) {
-      rows.push(React.createElement(Article, {
-        data: this.state.data[k],
-        id_key: k
-      }));
+      rows.unshift(
+        <Article
+        data={this.state.data[k]}
+        id_key={k}
+        key={k}
+        />
+      );
     }
 
 
-    return (<div  style={{ transition: 'all 1s', position: 'relative', left: this.state.left + 'px'}}>
+    return (<div  style={{
+        transition: 'all 1s',
+        position: 'relative',
+        left: this.state.left + 'px'
+      }}>
 					{rows}
 					<AddWrapper />
 				</div>
@@ -137,18 +146,26 @@ var Note = React.createClass({
     };
   },
   componentDidMount() {
-	const timer = setInterval(function() {
-		let left = this.state.left;		
-		left -= 55;
-		this.setState({ left: left })
-		if (left < 0) { 
-			this.setState({ left: '0' })
-			clearInterval(timer)
-		}
-	}.bind(this), 10)
+    const timer = setInterval(function() {
+      let left = this.state.left;
+      left -= 55;
+      this.setState({
+        left: left
+      })
+      if (left < 0) {
+        this.setState({
+          left: '0'
+        })
+        clearInterval(timer)
+      }
+    }.bind(this), 10)
   },
   render: function() {
-    return (<div className='main-wrapper' style={{ transition: 'all 1s', position: 'relative', left: this.state.left + 'px'}}><h1>Note</h1></div>)
+    return (<div className='main-wrapper' style={{
+        transition: 'all 1s',
+        position: 'relative',
+        left: this.state.left + 'px'
+      }}><h1>Note</h1></div>)
   }
 })
 
@@ -159,18 +176,26 @@ var Main = React.createClass({
     };
   },
   componentDidMount() {
-	const timer = setInterval(function() {
-		let left = this.state.left;		
-		left -= 55;
-		this.setState({ left: left })
-		if (left < 0) { 
-			this.setState({ left: '0' })
-			clearInterval(timer)
-		}
-	}.bind(this), 10)
+    const timer = setInterval(function() {
+      let left = this.state.left;
+      left -= 55;
+      this.setState({
+        left: left
+      })
+      if (left < 0) {
+        this.setState({
+          left: '0'
+        })
+        clearInterval(timer)
+      }
+    }.bind(this), 10)
   },
   render: function() {
-    return (<div className='note-wrapper' style={{ transition: 'all 1s', position: 'relative', left: this.state.left + 'px'}}><h1>Main</h1></div>)
+    return (<div className='note-wrapper' style={{
+        transition: 'all 1s',
+        position: 'relative',
+        left: this.state.left + 'px'
+      }}><h1>Main</h1></div>)
   }
 })
 
@@ -212,7 +237,9 @@ var SelectBar = React.createClass({
         break;
     }
 
-    return (	<div className='wrapper' style={{ overflow: 'hidden'}}>
+    return (	<div className='wrapper' style={{
+        overflow: 'hidden'
+      }}>
 			<button onClick={() => this.selectBarClick('Main')}>Main</button>
 			<button onClick={() => this.selectBarClick('Note')}>Note</button>
 			<button onClick={() => this.selectBarClick('ArticleWrapper')}>Article</button>
