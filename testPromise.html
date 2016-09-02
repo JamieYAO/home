@@ -3,6 +3,7 @@
 <meta charset='utf-8'/>
 <meta http-equiv="X-UA-Compatible" content="chrome=1">
 </head>
+<a href="https://github.com/JamieYAO/home/blob/gh-pages/testPromise.html">SOURCE CODE</a>
 <div id="log"></div>
 <script>
     'use strict';
@@ -24,7 +25,7 @@
             log.insertAdjacentHTML('beforeend', val + ') Promise fulfilled (<small>Async code terminated</small>)<br/>');
         })
 	.catch(function (reason) {
-	    log.insertAdjacentHTML('beforeend', 'Handle rejected promise ('+reason+') here.<br/> ');
+	    log.insertAdjacentHTML('beforeend', 'Promise rejected ('+reason+')<br/> ');
 	});
         log.insertAdjacentHTML('beforeend', thisPromiseCount + ') Promise made (<small>Sync code terminated</small>)<br/><br/>');
     }
