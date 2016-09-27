@@ -104,6 +104,9 @@ var ArticleWrapper = React.createClass({
       })
     }.bind(this))
   },
+  onKeyDown: function(e) {
+	alert('enter pressed: ' + e.target.value)
+  },
   render: function() {
 
     if (!this.state.loaded) {
@@ -126,15 +129,18 @@ var ArticleWrapper = React.createClass({
       );
     }
 
-
-    return (<div  style={{
+    return (
+	<div  style={{
         transition: 'all 1s',
         position: 'relative',
         left: this.state.left + 'px'
-      }}>
-					{rows}
-					<AddWrapper />
-				</div>
+      	}}>
+		<div>
+			<input onKeyDown={(e) => {if (e.keyCode == 13) this.onKeyDown(e)}}/>
+		</div>
+		{rows}
+		<AddWrapper />
+	</div>
     )
   }
 });

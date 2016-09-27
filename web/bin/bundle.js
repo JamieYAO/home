@@ -173,9 +173,13 @@
 	    var timer = setInterval(function () {
 	      var left = this.state.left;
 	      left -= 55;
-	      this.setState({ left: left });
+	      this.setState({
+	        left: left
+	      });
 	      if (left < 0) {
-	        this.setState({ left: '0' });
+	        this.setState({
+	          left: '0'
+	        });
 	        clearInterval(timer);
 	      }
 	    }.bind(this), 10);
@@ -189,7 +193,11 @@
 	      });
 	    }.bind(this));
 	  },
+	  onKeyDown: function onKeyDown(e) {
+	    alert('enter pressed: ' + e.target.value);
+	  },
 	  render: function render() {
+	    var _this = this;
 
 	    if (!this.state.loaded) {
 	      return _react2.default.createElement('h1', {
@@ -209,7 +217,18 @@
 
 	    return _react2.default.createElement(
 	      'div',
-	      { style: { transition: 'all 1s', position: 'relative', left: this.state.left + 'px' } },
+	      { style: {
+	          transition: 'all 1s',
+	          position: 'relative',
+	          left: this.state.left + 'px'
+	        } },
+	      _react2.default.createElement(
+	        'div',
+	        null,
+	        _react2.default.createElement('input', { onKeyDown: function onKeyDown(e) {
+	            if (e.keyCode == 13) _this.onKeyDown(e);
+	          } })
+	      ),
 	      rows,
 	      _react2.default.createElement(AddWrapper, null)
 	    );
@@ -227,9 +246,13 @@
 	    var timer = setInterval(function () {
 	      var left = this.state.left;
 	      left -= 55;
-	      this.setState({ left: left });
+	      this.setState({
+	        left: left
+	      });
 	      if (left < 0) {
-	        this.setState({ left: '0' });
+	        this.setState({
+	          left: '0'
+	        });
 	        clearInterval(timer);
 	      }
 	    }.bind(this), 10);
@@ -238,7 +261,11 @@
 	  render: function render() {
 	    return _react2.default.createElement(
 	      'div',
-	      { className: 'main-wrapper', style: { transition: 'all 1s', position: 'relative', left: this.state.left + 'px' } },
+	      { className: 'main-wrapper', style: {
+	          transition: 'all 1s',
+	          position: 'relative',
+	          left: this.state.left + 'px'
+	        } },
 	      _react2.default.createElement(
 	        'h1',
 	        null,
@@ -259,9 +286,13 @@
 	    var timer = setInterval(function () {
 	      var left = this.state.left;
 	      left -= 55;
-	      this.setState({ left: left });
+	      this.setState({
+	        left: left
+	      });
 	      if (left < 0) {
-	        this.setState({ left: '0' });
+	        this.setState({
+	          left: '0'
+	        });
 	        clearInterval(timer);
 	      }
 	    }.bind(this), 10);
@@ -270,7 +301,11 @@
 	  render: function render() {
 	    return _react2.default.createElement(
 	      'div',
-	      { className: 'note-wrapper', style: { transition: 'all 1s', position: 'relative', left: this.state.left + 'px' } },
+	      { className: 'note-wrapper', style: {
+	          transition: 'all 1s',
+	          position: 'relative',
+	          left: this.state.left + 'px'
+	        } },
 	      _react2.default.createElement(
 	        'h1',
 	        null,
@@ -302,7 +337,7 @@
 	  },
 
 	  render: function render() {
-	    var _this = this;
+	    var _this2 = this;
 
 	    if (!this.state.loaded) {
 	      return _react2.default.createElement(
@@ -328,25 +363,27 @@
 
 	    return _react2.default.createElement(
 	      'div',
-	      { className: 'wrapper', style: { overflow: 'hidden' } },
+	      { className: 'wrapper', style: {
+	          overflow: 'hidden'
+	        } },
 	      _react2.default.createElement(
 	        'button',
 	        { onClick: function onClick() {
-	            return _this.selectBarClick('Main');
+	            return _this2.selectBarClick('Main');
 	          } },
 	        'Main'
 	      ),
 	      _react2.default.createElement(
 	        'button',
 	        { onClick: function onClick() {
-	            return _this.selectBarClick('Note');
+	            return _this2.selectBarClick('Note');
 	          } },
 	        'Note'
 	      ),
 	      _react2.default.createElement(
 	        'button',
 	        { onClick: function onClick() {
-	            return _this.selectBarClick('ArticleWrapper');
+	            return _this2.selectBarClick('ArticleWrapper');
 	          } },
 	        'Article'
 	      ),
