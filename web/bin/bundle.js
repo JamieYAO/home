@@ -56,7 +56,25 @@
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-	var ref = new Wilddog("https://wild-boar-92305.wilddogio.com/article");
+	// Refrence https://docs.wilddog.com/quickstart/auth/web.html
+	// Wilddog auth sys
+	var config = {
+	  authDomain: "wild-boar-92305.wilddog.com",
+	  syncURL: "https://wild-boar-92305.wilddogio.com"
+	};
+	wilddog.initializeApp(config);
+	var rootRef = wilddog.sync().ref();
+	var ref = wilddog.sync().ref('/article');
+
+	/*
+	wilddog.auth().createUserWithEmailAndPassword(email,pwd)
+		.then(function (user) {
+	    console.info("user created.", user);
+		}).catch(function (err) {
+	    console.info("create user failed.", err);
+	});
+	*/
+
 	//ref.child('test_sync').set("hello world");
 	var g_target;
 	var AddWrapper = _react2.default.createClass({
@@ -169,10 +187,9 @@
 	    };
 	  },
 	  componentDidMount: function componentDidMount() {
-	    this.fetchData();
 	    var timer = setInterval(function () {
 	      var left = this.state.left;
-	      left -= 55;
+	      left -= 35;
 	      this.setState({
 	        left: left
 	      });
@@ -183,6 +200,20 @@
 	        clearInterval(timer);
 	      }
 	    }.bind(this), 10);
+
+	    var sceneRef = this;
+	    wilddog.auth().onAuthStateChanged(function (userInfo) {
+	      if (userInfo) {
+	        console.info('user login', userInfo, wilddog.auth().currrentUser);
+	        sceneRef.fetchData();
+	      } else {
+	        console.info('user logout');
+	        sceneRef.setState({
+	          data: null,
+	          loaded: false
+	        });
+	      }
+	    });
 	  },
 
 	  fetchData: function fetchData() {
@@ -194,15 +225,42 @@
 	    }.bind(this));
 	  },
 	  onKeyDown: function onKeyDown(e) {
-	    alert('enter pressed: ' + e.target.value);
+	    var email = '272915189@qq.com';
+	    var pwd = e.target.value;
+	    console.log('pwd: ' + pwd);
+	    console.log('email: ' + email);
+	    wilddog.auth().signInWithEmailAndPassword(email, pwd).then(function () {
+	      console.info("login success, currentUser->", wilddog.auth().currentUser);
+	      this.fetchData();
+	    }).catch(function (err) {
+	      console.info('login failed ->', err);
+	    });
+	  },
+	  onLogoutBtnClicked: function onLogoutBtnClicked(e) {
+	    var sceneRef = this;
+	    wilddog.auth().signOut().then(function () {
+	      console.info("user sign out.");
+	      sceneRef.setState({
+	        data: null,
+	        loaded: false
+	      });
+	    });
 	  },
 	  render: function render() {
 	    var _this = this;
 
 	    if (!this.state.loaded) {
-	      return _react2.default.createElement('h1', {
-	        className: "loading-hint"
-	      }, 'Loading ...');
+	      return _react2.default.createElement(
+	        'div',
+	        null,
+	        _react2.default.createElement(
+	          'div',
+	          null,
+	          _react2.default.createElement('input', { onKeyDown: function onKeyDown(e) {
+	              if (e.keyCode == 13) _this.onKeyDown(e);
+	            } })
+	        )
+	      );
 	    }
 
 	    var rows = [];
@@ -223,11 +281,9 @@
 	          left: this.state.left + 'px'
 	        } },
 	      _react2.default.createElement(
-	        'div',
-	        null,
-	        _react2.default.createElement('input', { onKeyDown: function onKeyDown(e) {
-	            if (e.keyCode == 13) _this.onKeyDown(e);
-	          } })
+	        'button',
+	        { onClick: this.onLogoutBtnClicked },
+	        'Logout'
 	      ),
 	      rows,
 	      _react2.default.createElement(AddWrapper, null)
@@ -516,25 +572,40 @@
 	var cachedSetTimeout;
 	var cachedClearTimeout;
 
+	function defaultSetTimout() {
+	    throw new Error('setTimeout has not been defined');
+	}
+	function defaultClearTimeout() {
+	    throw new Error('clearTimeout has not been defined');
+	}
 	(function () {
 	    try {
-	        cachedSetTimeout = setTimeout;
+	        if (typeof setTimeout === 'function') {
+	            cachedSetTimeout = setTimeout;
+	        } else {
+	            cachedSetTimeout = defaultSetTimout;
+	        }
 	    } catch (e) {
-	        cachedSetTimeout = function cachedSetTimeout() {
-	            throw new Error('setTimeout is not defined');
-	        };
+	        cachedSetTimeout = defaultSetTimout;
 	    }
 	    try {
-	        cachedClearTimeout = clearTimeout;
+	        if (typeof clearTimeout === 'function') {
+	            cachedClearTimeout = clearTimeout;
+	        } else {
+	            cachedClearTimeout = defaultClearTimeout;
+	        }
 	    } catch (e) {
-	        cachedClearTimeout = function cachedClearTimeout() {
-	            throw new Error('clearTimeout is not defined');
-	        };
+	        cachedClearTimeout = defaultClearTimeout;
 	    }
 	})();
 	function runTimeout(fun) {
 	    if (cachedSetTimeout === setTimeout) {
 	        //normal enviroments in sane situations
+	        return setTimeout(fun, 0);
+	    }
+	    // if setTimeout wasn't available but was latter defined
+	    if ((cachedSetTimeout === defaultSetTimout || !cachedSetTimeout) && setTimeout) {
+	        cachedSetTimeout = setTimeout;
 	        return setTimeout(fun, 0);
 	    }
 	    try {
@@ -553,6 +624,11 @@
 	function runClearTimeout(marker) {
 	    if (cachedClearTimeout === clearTimeout) {
 	        //normal enviroments in sane situations
+	        return clearTimeout(marker);
+	    }
+	    // if clearTimeout wasn't available but was latter defined
+	    if ((cachedClearTimeout === defaultClearTimeout || !cachedClearTimeout) && clearTimeout) {
+	        cachedClearTimeout = clearTimeout;
 	        return clearTimeout(marker);
 	    }
 	    try {

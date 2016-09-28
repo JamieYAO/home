@@ -1,7 +1,26 @@
 import React, { Component } from 'react';
 import ReactDOM, { render } from 'react-dom';
 
-var ref = new Wilddog("https://wild-boar-92305.wilddogio.com/article");
+// Refrence https://docs.wilddog.com/quickstart/auth/web.html
+// Wilddog auth sys
+var config = {
+  authDomain: "wild-boar-92305.wilddog.com",
+  syncURL: "https://wild-boar-92305.wilddogio.com" 
+};
+wilddog.initializeApp(config);
+var rootRef = wilddog.sync().ref();
+var ref = wilddog.sync().ref('/article');
+
+
+/*
+wilddog.auth().createUserWithEmailAndPassword(email,pwd)
+	.then(function (user) {
+    console.info("user created.", user);
+	}).catch(function (err) {
+    console.info("create user failed.", err);
+});
+*/
+
 //ref.child('test_sync').set("hello world");
 var g_target;
 var AddWrapper = React.createClass({
@@ -81,10 +100,9 @@ var ArticleWrapper = React.createClass({
     };
   },
   componentDidMount() {
-    this.fetchData();
     const timer = setInterval(function() {
       let left = this.state.left;
-      left -= 55;
+      left -= 35;
       this.setState({
         left: left
       })
@@ -95,6 +113,20 @@ var ArticleWrapper = React.createClass({
         clearInterval(timer)
       }
     }.bind(this), 10)
+
+	const sceneRef = this;
+	wilddog.auth().onAuthStateChanged(function (userInfo) {
+	    if(userInfo) {
+		    console.info('user login',userInfo, wilddog.auth().currrentUser);
+		sceneRef.fetchData();
+	    }else {
+		    console.info('user logout');
+		sceneRef.setState({
+			data: null,
+			loaded: false
+			});
+	    }
+	});
   },
   fetchData: function() {
     ref.orderByChild('time').on("value", function(snapshot) {
@@ -105,15 +137,37 @@ var ArticleWrapper = React.createClass({
     }.bind(this))
   },
   onKeyDown: function(e) {
-	alert('enter pressed: ' + e.target.value)
+	const email = '272915189@qq.com';
+	const pwd = e.target.value;
+	console.log('pwd: ' + pwd)
+	console.log('email: ' + email)
+	wilddog.auth().signInWithEmailAndPassword(email, pwd)
+	    .then(function () {
+		console.info("login success, currentUser->",  wilddog.auth().currentUser);
+		this.fetchData();
+	    }).catch(function (err) {
+		console.info('login failed ->',err);
+	    });
+  },
+  onLogoutBtnClicked: function(e) {
+	const sceneRef = this;
+	wilddog.auth().signOut().then(function () {
+	    console.info("user sign out.");
+		sceneRef.setState({
+			data: null,
+			loaded: false
+			});
+	});
   },
   render: function() {
 
     if (!this.state.loaded) {
       return (
-      React.createElement('h1', {
-        className: "loading-hint"
-      }, 'Loading ...')
+		<div>
+			<div>
+				<input onKeyDown={(e) => {if (e.keyCode == 13) this.onKeyDown(e)}}/>
+			</div>
+		</div>
       );
     }
 
@@ -135,9 +189,7 @@ var ArticleWrapper = React.createClass({
         position: 'relative',
         left: this.state.left + 'px'
       	}}>
-		<div>
-			<input onKeyDown={(e) => {if (e.keyCode == 13) this.onKeyDown(e)}}/>
-		</div>
+		<button onClick={this.onLogoutBtnClicked}>Logout</button>
 		{rows}
 		<AddWrapper />
 	</div>
