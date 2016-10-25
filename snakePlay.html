@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta name="description" content="Home : my index">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <link rel="shortcut icon" href="favicon.ico" />
+    <style>
+	body{
+	  font-family: 'microsoft yahei',Arial,sans-serif;
+	}
+
+	h1{
+	  font-size:24px;
+	  font-weight: normal; 
+	}
+
+	b{
+	  color: #dd4814;
+	  font-weight: normal;
+	}
+    </style>
+    <title>My Note Book</title>
+  </head>
+  <body>
+    <!-- HEADER -->
+    <h1>贪食蛇</h1>
+    <div id="score">第1关 分数: 0</div>
+
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap">
+	<canvas width="300"height="300"id="canvas"></canvas>
+    </div>
+
+    <!-- FOOTER  -->
+    <div id="control">游戏控制: W = 上; A = 左; S = 下; D = 右</div>
+
+    <script >
+	var context;
+
+	var width = 300;
+	var height = 300;
+
+	var snakeLength = 3;
+	var sqSize = 10;
+
+	var bodyX = [150 + sqSize, 150, 150 - sqSize];
+	var bodyY = [150, 150, 150];
+
+	var vX = [1, 1, 1]; //贪食蛇每一节图形的水平方向速度(1为向右，0为静止，-1为向左)
+	var vY = [0, 0, 0]; //贪食蛇每一节图形的垂直方向速度(1为向下，0为静止，-1为向上)
+
+	var rX;
+	var rY;
+
+	var eaten = true;
+
+	var level = 1;
+
+	var score = 0;
+
+	var scoreDiv;
+
+	var gameOver = false;
+
+	var controlsDiv;
+
+	window.addEventListener("load", init, true);
+	window.onkeydown = keydown;
+	scoreDiv = document.getElementById("score");
+	controlDiv = document.getElementById("control");
+	var intervalId = setTimeout(gameProcess, 1000/6);
+
+	function init() {
+		context = document.getElementById("canvas").getContext("2d");
+		drawCanvasBoundary();
+		drawSnake();
+	};
+
+	function gameProcess() {
+		intervalId = setTimeout(gameProcess, 1500/(6 * level));
+		clear();
+		drawCanvasBoundary();
+		placeRat();
+		moveSnake();
+		checkCollision();
+		drawSnake();
+	};
+
+	function clear() {
+		context.clearRect(0, 0, width, height);
+	};
+	
+	function drawCanvasBoundary() {
+		context.fillStyle = "#FFF";
+		context.fillRect(0, 0, width, height);
+		context.fill();
+		context.srokeStyle = "#666";
+		context.strokeRect(0, 0, width, height);
+	};
+
+	function moveSnake() {
+		for(var i = 0; i < snakeLength; i++) {
+			bodyX[i] += (vX[i] * sqSize);
+			bodyY[i] += (vY[i] * sqSize);
+		};
+
+		for(var i = snakeLength - 1; i > 0; i--) {
+			vX[i] = vX[i-1];
+			vY[i] = vY[i-1];
+		};
+
+		eatRat();
+	};
+
+	function eatRat() {
+		if (bodyX[0] == rX && bodyY[0] == rY) {
+			eaten = true;
+
+			var newX = bodyX[snakeLength - 1] - vX[snakeLength - 1] * sqSize;
+			var newY = bodyY[snakeLength - 1] - vY[snakeLength - 1] * sqSize;
+
+			bodyX.push(newX);
+			bodyY.push(newY);
+
+			vX.push(vX[snakeLength -1]);
+			vY.push(vY[snakeLength -1]);
+			snakeLength++;
+
+			score += 10;
+
+			if ((score % 100) == 0) level++;
+
+			scoreDiv.innerHTML = "第" + level + "关 分数: " + score ;
+		};
+	};
+
+	function drawSnake() {
+		for(var i = 0; i < snakeLength; i++) {
+			drawPoin(bodyX[i], bodyY[i]);
+		}
+	};
+
+	function placeRat() {
+		if (eaten) {
+			rX = Math.floor(width * Math.random() / sqSize) * sqSize;
+			rY = Math.floor(height * Math.random() / sqSize) * sqSize;
+			if(checkFoodCollision(rX, rY)) {
+				placeRat();
+			} else {
+				eaten = false;
+			};
+		};
+		drawPoin(rX, rY);
+	};
+
+	function checkFoodCollision(x, y) {
+		for (var i = 0; i < snakeLength; i++) {
+			if (x == bodyX[i] && y == body[i]) {
+				return true;
+			};
+			return false;
+		};
+	};
+
+	function drawPoin(x, y) {
+		context.fillStyle = "#eb281d";
+		context.fillRect(x, y, sqSize, sqSize);
+		context.fill();
+		context.strokeStyle = "#fff";
+		context.strokeRect(x, y, sqSize, sqSize);
+	};
+
+	function keydown(e) {
+		// left
+		if (e.keyCode == 65 && vX[0] != 1) {
+			vX[0] = -1;
+			vY[0] = 0;
+		}
+
+		// top 
+		if (e.keyCode == 87 && vY[0] != 1) {
+			vY[0] = -1;
+			vX[0] = 0;
+		}
+
+		// right
+		if (e.keyCode == 68 && vX[0] != -1) {
+			vX[0] = 1;
+			vY[0] = 0;
+		}
+
+		// bottom
+		if (e.keyCode == 83 && vY[0] != -1) {
+			vY[0] = 1;
+			vX[0] = 0;
+		}
+
+		if (e.keyCode == 13 && gameOver == true) {
+		  gameOver = false;
+		  
+		  //游戏结束按回车键重新开始
+		  restart(); 
+		}
+	};
+
+	//判断自身碰撞
+	function checkSelfCollision(x, y)
+	{
+	  for (var i = 4; i < snakeLength; i++)
+	    if(x == bodyX[i] && y == bodyY[i])
+	    {
+	      return true;
+	    }
+	  return false;
+	}
+	 
+	//判断是否碰撞区及调用自身碰撞
+	function checkCollision()
+	{
+	  if(bodyX[0] >= width || bodyX[0] < 0 || bodyY[0] < 0 || bodyY[0] >= height)
+	  {
+	    scoreDiv.innerHTML = "第" + level + "关 分数: " + score
+	      +" <b>游戏结束</b>";
+	    controlDiv.innerHTML = "按 \"回车键\" 重新开始";
+	    gameOver = true;
+	    clearTimeout(intervalId);
+	  }
+	  else if(snakeLength > 4)
+	    {
+	      if(checkSelfCollision(bodyX[0],bodyY[0]))
+	      {
+		scoreDiv.innerHTML = "第" + level + "关 分数: " + score
+		+" <b>游戏结束</b>";
+		controlDiv.innerHTML = "按 \"回车键\" 重新开始";
+		gameOver = true;
+		clearTimeout(intervalId);
+	      }
+	    }
+	}
+
+	//重新开始游戏
+	function restart()
+	{
+	    bodyX = [150+sqSize, 150, 150-sqSize];
+	    bodyY = [150, 150, 150];
+	 
+	    vX = [1, 1, 1];
+	    vY = [0, 0, 0];
+	 
+	    snakeLength = 3;
+	 
+	    score = 0;
+	    level  = 1;
+	 
+	    eaten = true;
+	 
+	    scoreDiv.innerHTML = "第" + level + "关 分数: " + score ;
+	    controlDiv.innerHTML = "游戏控制: W = 上; A = 左; S = 下; D = 右";
+	 
+	    intervalId = setTimeout(gameProcess, 1000/6);
+	}
+
+    </script>
+  </body>
+
+</html>
