@@ -1,0 +1,254 @@
+THIS QUIZ CONTRIBUTES MORE THAN 80% WHEN DECIDING WHETHER YOU WILL ENTER THE NEXT ROUND OF INTERVIEW
+这份笔试题的答卷将以80%以上的权重决定您是否能晋级下一轮面试，请不要满足于“差不多”、“还不错”、“就这样”的答案哦！
+
+About us:    http://www.v2ex.com/t/166173
+
+A Video version: https://youtu.be/uQO62wCE8co
+
+Want to know more about us? hai@orgrimmar.io
+
+Not sure what the question is? crvv@orgrimmar.io
+
+Notes before you begin:
+
+*Please list the reference websites.
+
+*Please copy paste and answer in a SEPARATE doc or email
+
+*Compatibility Requirement: 'latest versions' of NodeJS combined with ‘latest versions’ of Babel official features. 
+
+First, please kindly provide links to your Github/Stackoverflow/V2EX, it’s OKAY if you don’t have one:
+
+Github:
+Stackoverflow:
+V2EX:
+Others:
+
+Basic Question. 
+Compare to other common backend language (such as PHP, Java, Python, Ruby), what’s the most different with Node.js? Write something in your own words to show your understandings. 
+Write something about Javascript Closure, for example, how often we use closure in our programs, what is the advantage, the example of incorrect using, etc.
+Basic Programming
+
+	var orginalData = [{name:’jch’, age:30, score:90, sex: 1, lesson: ‘math’},{ name:’oh’, age:31, score: 80, sex:1, lesson: ‘math’}, {name:’jia’, age:27, score: 70, sex:0, lesson: ‘math’}, {name:’jch’, age: 30, score: 80, sex: 1, lesson: ‘english’}];
+
+	Please write functions to do following actions for this data.
+return Array contains all data that age more than given certain value.
+return an object keyed by ‘name’ and ‘lesson’ following the same condition of action 1.
+return an object shows the average scores group by ‘lesson’ and ‘sex’;
+
+      4. Async Programming
+
+	There is an input string, such as 
+
+“Today we see a good accelerator: http://alchemistaccelerator.com, you can found some thing in the wikipedia, https://en.wikipedia.org/wiki/The_Alchemist_Accelerator. or google it by : https://www.google.com.hk/search?es_sm=91&q=alchemist+accelerator&oq=alchemist+a&gs_l=serp.3.2.0l10.233056.233264.0.235425.2.2.0.0.0.0.134.267.0j2.2.0....0...1c.1j4.64.serp..0.2.265.J6dlgO9eRVI”. 
+
+This string contains 3 http/https address and some text contents. Using any way to fetch the content of those 3 pages, replace the URL address into the content of page. and then return the replaced string.
+
+Programming and Debugging
+
+Fix bugs in following codes, 
+*do not consider the detail action in reference functions, just treat that function as library’s functions that you download from some open-source code.
+
+const sendMsg = (chatId, sender, contentType, talkType, content) => {
+   return new Promise((resolve, reject) => {
+       msgAPI.sendMsg(chatId, sender, contentType, talkType, content).then(function(err, result){
+           return resolve(result);
+       })
+   })
+}
+
+const msgAPI.sendMsg  = (chatId, sender, contentType, talkType, content, fetchOK) => {
+    model.SocTopic.findFirstInGroups(group_ids).then(function(sts){
+       model.SocInfo.getAllFirstInfoInTopic(sts).then(function(sis){
+           model.SocInfo.findAll({where:{id: _.pluck(sis, "id")}, include:[{model: model.SocContent, as:"socContent"}]}).then(function(si_ins){
+               result.st2 = sts ? sts : [];
+               result.si2 = si_ins ? si_ins : [];
+               fetchOK(null, result);
+           })
+       })
+    }).catch(fetchOK)
+}
+
+Target: Cache permission and return user’s permission as expect.
+Assume the data save in the database with following columns:
+
+Table[Permit_Rule] 
+Columns:
+id, group_id, workflow_id, app_id, group_user_type
+Table[Group]
+Columns:
+id, groupName
+Table[User]
+Columns:
+	id, userName
+Table[Group_has_User]
+Columns: 
+	group_id, user_id, group_user_type
+Table[Workflow], 
+Columns:
+	id, app_id, other_columns...
+Table[App]: Columns is not important in this question 
+xxx_id means the foreign key to table[xxx]’s id column column.
+group_user_type is the user in that group with additional classify.
+
+Here are some Sample data of Permit_Rule
+
+id
+group_id
+workflow_id
+app_id
+group_user_type
+10
+-1
+3
+2
+1
+11
+-1
+null
+10
+null
+12
+1
+5
+10
+null
+
+And the rule line means:
+According to 10, the person in group ‘-1’ with group_user_type ‘1’ can access app ‘2’ group’s Workflow ‘3’;
+According to 11, the person in group ‘-1’ with any group_user_type can access app ‘10’ ‘s all workflows.
+According to 12, the person in group ‘1’ with any group_user_type can access app ‘10’ ‘s workflow ‘5’.
+
+      Question:
+When system startup, write an function to create cache data, which will be used by following functional request when real user login into the system, and then write the function to return requested data with given format.
+
+when input user_id, return a object look like { 2 : { 3 : true, 4: false, 5: false}, 10 : {} }, it means for appid = 2 , workflow 3 is allow access and 4,5 are denied; for workflow 10, all workflows are denied.
+when input user_id and app_id, return an object contains { 3 : true, 4: false, 5: false}
+when input user_id and app_id, workflow_id, return true/false.
+
+*Note that user can belong to many groups, even in one group, one user can also have multiple group_user_type.
+
+Database ORM models define the relationships between objects. if you got an Array of Instances(data), belong to variant of models. One instances may used by other instance. each instances in array has property to indicate whether it is changed or not, and the change is kind of new/modify/delete. (Beware, instance may record other instance(s) by one property. those instance may in or not in the Array given to you)
+	
+Question: TRY to find an strategy to write all changes back to database with batch operation. Use SQL lines as less as possible. 
+
+	Try to give an example to understand what this question is.
+
+Model --- Project  
+Model --- User  
+Model --- Tool
+
+	For the model Project, may have an instance:  ‘Make a flight’
+To do this Project, it must need humans to involve, so Project have a property called ‘participants’, which is an array contains lots of instances of ‘User’ model.
+To do the Project, we need lots of tools, so there are another property called ‘tools’.
+Tool is own by User, so Tool has a ‘owner’ reference to User.
+
+There maybe an array contains one project and one tool, 
+
+Project<Make a flight>
+Tool<Knife>
+
+participants: 
+User<A1>, User<B1>, User<C1>
+tools: 
+
+owner:
+User<D1>
+Tool<hammer>
+Tool<Drill>
+owner: User<C1>
+owner: <D1>
+
+	and share User<C1>, and User<D1>, and D1 maybe an new instance.
+	
+*This is only an simple example to let you know the tree of model’s instances, Please carefully consider all possible combinations.
+
+
+
+
+
+A table in PostgreSQL 9.5 is:
+
+CREATE TABLE "orders" (
+  "id" INTEGER PRIMARY KEY,
+   "list" JSONB
+);
+
+id
+list
+4
+[{"price": 5, "name": "coffee", "amount": 2}]
+5
+[{"price": 10, "name": "book", "amount": 1},
+{"price": 2, "name": "apple", "amount": 15}]
+6
+[{"price": 4, "name": "coffee", "amount": 1}]
+
+Please write only one SQL statement to get the following result:
+
+name
+unit_price
+amount
+total_amount
+price
+total_price
+coffee
+5
+2
+3
+10
+54
+coffee
+4
+1
+3
+4
+54
+book
+10
+1
+1
+10
+54
+apple
+2
+15
+15
+30
+54
+
+
+
+Advanced Questions (Optional, answer as much as you can/wish to)
+
+Show the methods of Exception Handling in Node.js/Javascript, show how and what need to pay attention when using those methods.
+How to use Promise and Generator for async function, write down your own understandings.
+There is an array of predefined pure async actions, those actions may succeed or fail. Please run them all and get the results of success and fail. In addition, please consider these actions in group should repeatedly run many times and results will be different each run, we don’t want to run logic to prepare predefined actions each time running, how to make it work correctly as expected.  
+There are two Promise-style method/function in one class, with same input arguments, for example, one for insert and other for update. According to some condition, such as, the input array contain the object with the ‘id’ value or without, choose correspond method will run and then merge the results as same order as input array. 
+*Code as CONCISELY as possible. 
+Knowledge Question (Optional, answer as much as you can/wish to)
+
+Node.js has a huge number of open-source libraries/modules, write down the most important libs in your mind and why these are important. 
+Write your own understanding about why ES2015 consider to give us those new features. (No need to write all features. write best of them you know and understand)
+Share data among Node.js modules. 
+Explain ES2015 Class for javascript. As we know, ES2015 not really introduce new object-oriented inheritance model, but some of traditional class features now available in some ways. (For this question, you’d better show your understanding or interesting things you know or something need to be taken care of. )
+how to use ‘this’? 
+*Consider any ways including common and uncommon, new in ES2015 etc., write down all you know in cases, show how to change, set, and how to avoid problems. 
+How does ES2015 determine the function’s ‘name’ property. 
+Please explain why: 
+let a = null;
+	why
+        	   a == 0 // false
+        	   a > 0 // false
+        	   a >=0 // true         
+                  2. +[] === 0 // true
+
+Congratulations, you finished it!
+
+Now you can send the answers to
+
+eng@orgrimmar.io
+
+Thank you for your time!
+
+
