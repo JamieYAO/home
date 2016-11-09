@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta name="description" content="Home : my index">
+
+    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
+
+    <script src="javascripts/node_modules/jquery/dist/jquery.min.js"></script>
+    <script src="javascripts/node_modules/react/dist/react-with-addons.js"></script>
+    <script src="javascripts/node_modules/react-dom/dist/react-dom.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.23/browser.min.js"></script>
+<!--
+    <script src="javascripts/node_modules/react/dist/react.js"></script>
+    <script src="http://code.jquery.com/jquery-1.11.1.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/15.0.1/react.js"></script> 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/15.0.1/react-dom.js"></script> 
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/marked/0.3.2/marked.min.js"></script>
+-->
+
+    <style>
+	html {
+		background: url(http://hbfile.b0.upaiyun.com/img/home/banner/6379c260e25b6a60a45c889d9d6481b0c837bee9d0dd2);
+		background-attachment: fixed;
+	}
+	body {
+		background: none;
+	}
+	#main_content_wrap {
+		opacity: .9;
+	}
+	.example-enter {
+	  opacity: 0.01;
+	  transition: opacity .5s ease-in;
+	}
+
+	.example-enter.example-enter-active {
+	  opacity: 1;
+	}
+	.example-leave {
+	  opacity: 1;
+	  transition: opacity .5s ease-in;
+	}
+
+	.example-leave.example-leave-active {
+	  opacity: 0.01;
+	}
+	#test: hover {
+		background-color: red
+	}
+    </style>
+
+    <title>My Note Book</title>
+  </head>
+
+  <body>
+	<div id='test'>???</div>
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+      <section id="main_content" class="inner">
+
+      </section>
+    </div>
+  </body>
+
+    <script src="node_modules/react-infinite/dist/react-infinite.js"></script>
+  <script type='text/babel'>
+var ListItem = React.createClass({
+    render: function() {
+        return <div className="infinite-list-item" style={{height: '100px'}}>
+        List Item {this.props.num}
+        </div>;
+    }
+});
+
+var InfiniteList = React.createClass({
+    getInitialState: function() {
+        return {
+            elements: this.buildElements(0, 20),
+            isInfiniteLoading: false
+        }
+    },
+
+    buildElements: function(start, end) {
+        var elements = [];
+        for (var i = start; i < end; i++) {
+            elements.push(<ListItem key={i} num={i}/>)
+        }
+        return elements;
+    },
+
+    handleInfiniteLoad: function() {
+        var that = this;
+        this.setState({
+            isInfiniteLoading: true
+        });
+        setTimeout(function() {
+            var elemLength = that.state.elements.length,
+                newElements = that.buildElements(elemLength, elemLength + 100);
+            that.setState({
+                isInfiniteLoading: false,
+                elements: that.state.elements.concat(newElements)
+            });
+        }, 2500);
+    },
+
+    elementInfiniteLoad: function() {
+        return <div className="infinite-list-item">
+            Loading...
+        </div>;
+    },
+
+    render: function() {
+        return <Infinite elementHeight={100}
+                         containerHeight={250}
+                         infiniteLoadBeginEdgeOffset={200}
+                         onInfiniteLoad={this.handleInfiniteLoad}
+                         loadingSpinnerDelegate={this.elementInfiniteLoad()}
+                         isInfiniteLoading={this.state.isInfiniteLoading}
+                         >
+            {this.state.elements}
+        </Infinite>;
+    }
+});
+
+ReactDOM.render(<InfiniteList/>,
+        document.getElementById('main_content'));
+  </script>
+</html>

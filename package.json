@@ -19,6 +19,7 @@
   "dependencies": {
     "bowser": "^1.4.4",
     "coffee-loader": "^0.7.2",
+    "react-infinite": "^0.10.0",
     "webpack": "^1.13.1"
   },
   "devDependencies": {

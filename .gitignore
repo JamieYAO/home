@@ -44,6 +44,8 @@ ios/build/*
 # node
 #
 node_modules/
+javascripts/node_modules/
+javascripts/node_modules/*
 
 # BUCK
 buck-out/
@@ -51,7 +53,7 @@ buck-out/
 android/app/libs
 android/keystores/debug.keystore
 
-# local logs 
+# local logs
 *.log
 
 # webpack

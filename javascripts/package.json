@@ -11,6 +11,7 @@
     "react": "*",
     "react-dom": "*",
     "react-router": "^2.7.0",
+    "remarkable": "^1.7.1",
     "webpack": "*"
   }
 }

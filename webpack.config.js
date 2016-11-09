@@ -1,8 +1,8 @@
 module.exports = {
-  entry: './javascripts/main.js',
+  entry: './javascripts/nodeBook.index.js',
   output: {
     path: './web/bin/',
-    filename: 'bundle.js'       
+    filename: 'bundle.js'
   },
   module: {
     loaders: [
