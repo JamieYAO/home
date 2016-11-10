@@ -7,10 +7,9 @@
     "babel-preset-react": "*",
     "babel-preset-react-native": "*",
     "babel-preset-stage-0": "*",
-    "jquery": "*",
-    "react": "*",
+    "react": "^15.3.0",
     "react-dom": "*",
-    "react-router": "^2.7.0",
+    "react-router": "^2.8.1",
     "remarkable": "^1.7.1",
     "webpack": "*"
   }

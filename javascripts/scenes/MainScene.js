@@ -10,6 +10,7 @@ const Component = React.Component;
 import MarkdownEditor from "../widget/MarkdownEditor";
 import NoteScene from "./NoteScene";
 import ArticleScene from "./ArticleScene";
+import SideBar from "../widget/SideBar";
 
 var Main = React.createClass({
   getInitialState() {
@@ -41,30 +42,41 @@ var Main = React.createClass({
   }
 })
 
-var SelectBar = React.createClass({
-  getInitialState: function() {
-    return {
-      data: {},
-      loaded: false,
-      page: 'Main',
-    };
-  },
-  componentDidMount() {
-    this.setState({
-      loaded: true
-    })
-  },
+class MainScene extends Component {
+
+	state: {
+    page: String,
+	}
+
+	constructor(props) {
+		super(props);
+		this.state = {
+      page: "Main",
+		};
+	}
+
   selectBarClick(selector: string) {
     this.setState({
       page: selector
     })
-  },
-  render: function() {
+  }
 
-    if (!this.state.loaded) {
-      return (<h1 className='loading-hint'>Loading</h1>)
-    }
-
+	render() {
+    const selectArry =
+            [
+              {
+                key: "Main",
+                func: () => {this.selectBarClick("Main")}
+              },
+              {
+                key: "Note",
+                func: () => {this.selectBarClick("Note")}
+              },
+              {
+                key: "Article",
+                func: () => {this.selectBarClick("Article")}
+              }
+            ]
     let pageComponent;
     let page = this.state.page;
     switch (page) {
@@ -74,40 +86,16 @@ var SelectBar = React.createClass({
       case 'Note':
         pageComponent = <NoteScene/>
         break;
-      case 'ArticleWrapper':
+      case 'Article':
         pageComponent = <ArticleScene/>
         break;
     }
-
-    return (	<div className='wrapper' style={{
-        overflow: 'hidden'
-      }}>
-			<button onClick={() => this.selectBarClick('Main')}>Main</button>
-			<button onClick={() => this.selectBarClick('Note')}>Note</button>
-			<button onClick={() => this.selectBarClick('ArticleWrapper')}>Article</button>
-			{pageComponent}
-		</div>
-    )
-  }
-});
-
-class MainScene extends Component {
-
-	state: {
-    key: String
-	}
-
-	constructor(props) {
-		super(props);
-		this.state = {
-      key: null
-		};
-	}
-
-	render() {
 		return (
       <div>
-        <SelectBar />
+        <SideBar
+          selectArry={selectArry}
+        />
+        {pageComponent}
         <MarkdownEditor
           shouldDisable={() => {return false;} }
           useExplicitPreviewButton={true}
