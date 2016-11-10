@@ -11,6 +11,7 @@ import MarkdownEditor from "../widget/MarkdownEditor";
 import NoteScene from "./NoteScene";
 import ArticleScene from "./ArticleScene";
 import SideBar from "../widget/SideBar";
+import constants from "../widget/constants";
 
 var Main = React.createClass({
   getInitialState() {
@@ -51,7 +52,7 @@ class MainScene extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-      page: "Main",
+      page: constants.PAGES.MAIN,
 		};
 	}
 
@@ -65,28 +66,28 @@ class MainScene extends Component {
     const selectArry =
             [
               {
-                key: "Main",
-                func: () => {this.selectBarClick("Main")}
+                key: constants.PAGES.MAIN,
+                func: () => {this.selectBarClick(constants.PAGES.MAIN)}
               },
               {
-                key: "Note",
-                func: () => {this.selectBarClick("Note")}
+                key: constants.PAGES.NOTE,
+                func: () => {this.selectBarClick(constants.PAGES.NOTE)}
               },
               {
-                key: "Article",
-                func: () => {this.selectBarClick("Article")}
+                key: constants.PAGES.ARTICLE,
+                func: () => {this.selectBarClick(constants.PAGES.ARTICLE)}
               }
             ]
     let pageComponent;
     let page = this.state.page;
     switch (page) {
-      case 'Main':
+      case constants.PAGES.MAIN:
         pageComponent = <Main/>
         break;
-      case 'Note':
+      case constants.PAGES.NOTE:
         pageComponent = <NoteScene/>
         break;
-      case 'Article':
+      case constants.PAGES.ARTICLE:
         pageComponent = <ArticleScene/>
         break;
     }

@@ -72,6 +72,7 @@
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 	/*
+	import { Router, Route, Link, browserHistory, IndexRedirect } from 'react-router'
 	const Router = require('react-router/lib/Router');
 	const Route = require('react-router/lib/Route');
 	const IndexRedirect = require('react-router/lib/IndexRedirect');
@@ -112,9 +113,9 @@
 	  <Router  history={browserHistory}>
 	    <Route path={constants.ROUTE_PATHS.ROOT} component={MainScene}>
 	      <IndexRedirect to={constants.ROUTE_PATHS.HOME} />
-	      <Route path={constants.ROUTE_PATHS.HOME} component={withRouter(MainScene)} />
-	      <Route path={constants.ROUTE_PATHS.NOTE} component={withRouter(MainScene)} />
-	      <Route path={constants.ROUTE_PATHS.ARTICLE} component={withRouter(MainScene)} />
+	      <Route path={constants.ROUTE_PATHS.HOME} component={MainScene} />
+	      <Route path={constants.ROUTE_PATHS.NOTE} component={MainScene} />
+	      <Route path={constants.ROUTE_PATHS.ARTICLE} component={MainScene} />
 	    </Route>
 	  </Router>
 	);
@@ -21539,6 +21540,12 @@
 	  ARTICLE: "/article"
 	};
 
+	exports.PAGES = {
+	  MAIN: "Main",
+	  NOTE: "Note",
+	  ARTICLE: "Article"
+	};
+
 /***/ },
 /* 173 */
 /***/ function(module, exports, __webpack_require__) {
@@ -21577,6 +21584,10 @@
 	var _SideBar = __webpack_require__(239);
 
 	var _SideBar2 = _interopRequireDefault(_SideBar);
+
+	var _constants = __webpack_require__(172);
+
+	var _constants2 = _interopRequireDefault(_constants);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -21638,7 +21649,7 @@
 	    var _this = _possibleConstructorReturn(this, (MainScene.__proto__ || Object.getPrototypeOf(MainScene)).call(this, props));
 
 	    _this.state = {
-	      page: "Main"
+	      page: _constants2.default.PAGES.MAIN
 	    };
 	    return _this;
 	  }
@@ -21656,31 +21667,31 @@
 	      var _this2 = this;
 
 	      var selectArry = [{
-	        key: "Main",
+	        key: _constants2.default.PAGES.MAIN,
 	        func: function func() {
-	          _this2.selectBarClick("Main");
+	          _this2.selectBarClick(_constants2.default.PAGES.MAIN);
 	        }
 	      }, {
-	        key: "Note",
+	        key: _constants2.default.PAGES.NOTE,
 	        func: function func() {
-	          _this2.selectBarClick("Note");
+	          _this2.selectBarClick(_constants2.default.PAGES.NOTE);
 	        }
 	      }, {
-	        key: "Article",
+	        key: _constants2.default.PAGES.ARTICLE,
 	        func: function func() {
-	          _this2.selectBarClick("Article");
+	          _this2.selectBarClick(_constants2.default.PAGES.ARTICLE);
 	        }
 	      }];
 	      var pageComponent = void 0;
 	      var page = this.state.page;
 	      switch (page) {
-	        case 'Main':
+	        case _constants2.default.PAGES.MAIN:
 	          pageComponent = React.createElement(Main, null);
 	          break;
-	        case 'Note':
+	        case _constants2.default.PAGES.NOTE:
 	          pageComponent = React.createElement(_NoteScene2.default, null);
 	          break;
-	        case 'Article':
+	        case _constants2.default.PAGES.ARTICLE:
 	          pageComponent = React.createElement(_ArticleScene2.default, null);
 	          break;
 	      }

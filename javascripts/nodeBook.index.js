@@ -9,6 +9,7 @@ import ReactDOM, { render } from 'react-dom';
 import constants from './widget/constants';
 
 /*
+import { Router, Route, Link, browserHistory, IndexRedirect } from 'react-router'
 const Router = require('react-router/lib/Router');
 const Route = require('react-router/lib/Route');
 const IndexRedirect = require('react-router/lib/IndexRedirect');
@@ -44,9 +45,9 @@ const routes = (
   <Router  history={browserHistory}>
     <Route path={constants.ROUTE_PATHS.ROOT} component={MainScene}>
       <IndexRedirect to={constants.ROUTE_PATHS.HOME} />
-      <Route path={constants.ROUTE_PATHS.HOME} component={withRouter(MainScene)} />
-      <Route path={constants.ROUTE_PATHS.NOTE} component={withRouter(MainScene)} />
-      <Route path={constants.ROUTE_PATHS.ARTICLE} component={withRouter(MainScene)} />
+      <Route path={constants.ROUTE_PATHS.HOME} component={MainScene} />
+      <Route path={constants.ROUTE_PATHS.NOTE} component={MainScene} />
+      <Route path={constants.ROUTE_PATHS.ARTICLE} component={MainScene} />
     </Route>
   </Router>
 );

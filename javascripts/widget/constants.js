@@ -6,3 +6,9 @@ exports.ROUTE_PATHS = {
   NOTE: "/note",
   ARTICLE: "/article"
 }
+
+exports.PAGES = {
+  MAIN: "Main",
+  NOTE: "Note",
+  ARTICLE: "Article"
+}
