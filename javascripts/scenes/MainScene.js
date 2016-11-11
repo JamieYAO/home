@@ -7,7 +7,7 @@
 const React = require('react');
 const Component = React.Component;
 
-import MarkdownEditor from "../widget/MarkdownEditor";
+// import MarkdownEditor from "../widget/MarkdownEditor";
 import NoteScene from "./NoteScene";
 import ArticleScene from "./ArticleScene";
 import SideBar from "../widget/SideBar";
@@ -97,10 +97,12 @@ class MainScene extends Component {
           selectArry={selectArry}
         />
         {pageComponent}
+        { /*
         <MarkdownEditor
           shouldDisable={() => {return false;} }
           useExplicitPreviewButton={true}
         />
+        */}
       </div>
     );
 	}
