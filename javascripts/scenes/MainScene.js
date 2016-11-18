@@ -49,35 +49,45 @@ class MainScene extends Component {
     page: String,
 	}
 
+  _selectArry: Array
+
 	constructor(props) {
 		super(props);
 		this.state = {
       page: constants.PAGES.MAIN,
+      showSidebar: false,
 		};
+    this._selectArry =
+            [
+              {
+                key: constants.PAGES.MAIN,
+                func: () => {this.singleSelectBarClicked(constants.PAGES.MAIN)}
+              },
+              {
+                key: constants.PAGES.NOTE,
+                func: () => {this.singleSelectBarClicked(constants.PAGES.NOTE)}
+              },
+              {
+                key: constants.PAGES.ARTICLE,
+                func: () => {this.singleSelectBarClicked(constants.PAGES.ARTICLE)}
+              }
+            ]
 	}
 
-  selectBarClick(selector: string) {
+  singleSelectBarClicked(selector: string) {
     this.setState({
-      page: selector
+      page: selector,
+      showSidebar: false
+    })
+  }
+
+  toggleSidebar() {
+    this.setState({
+      showSidebar: !this.state.showSidebar
     })
   }
 
 	render() {
-    const selectArry =
-            [
-              {
-                key: constants.PAGES.MAIN,
-                func: () => {this.selectBarClick(constants.PAGES.MAIN)}
-              },
-              {
-                key: constants.PAGES.NOTE,
-                func: () => {this.selectBarClick(constants.PAGES.NOTE)}
-              },
-              {
-                key: constants.PAGES.ARTICLE,
-                func: () => {this.selectBarClick(constants.PAGES.ARTICLE)}
-              }
-            ]
     let pageComponent;
     let page = this.state.page;
     switch (page) {
@@ -94,7 +104,9 @@ class MainScene extends Component {
 		return (
       <div>
         <SideBar
-          selectArry={selectArry}
+          selectArry={this._selectArry}
+          shouldShow={this.state.showSidebar}
+          toggleSidebar={ () => this.toggleSidebar()}
         />
         {pageComponent}
         { /*

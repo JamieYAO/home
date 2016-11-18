@@ -9,21 +9,25 @@ const Component = React.Component;
 
 class SideBar extends Component {
   _sideBarRef: Component
-	state: {
-    show: Boolean,
+  static propTypes: {
+    shouldShow: React.propTypes.func.isRequired,
     key: String
-	}
+  }
   styles: Object
 
 	constructor(props) {
 		super(props);
     this._sideBarRef = null;
-		this.state = {
-      show: false,
-      key: null
-		};
     this.styles = {
       sideBarWrapper: {
+          width: "155px",
+          position: "fixed",
+          top: 0,
+          bottom: 0,
+          transition: "600ms cubic-bezier(0, 0.18, 0, 1.47)",
+          zIndex: "999",
+          background: "burlywood",
+          textAlign: "center"
       },
       btn: {
         position: "absolute",
@@ -35,64 +39,45 @@ class SideBar extends Component {
     }
 	}
 
-  hideOrShowBar(cb?: func) {
-    if (!cb) {
-      return this.setState({
-                show: !this.state.show
-              })
-    };
-    this.setState({
-      show: !this.state.show
-    }, function(cb) {
-      return cb();
-    })
-  }
-
-  onContleClicked() {
-    this.hideOrShowBar()
-  }
-
 	render() {
-    let selectList = [];
     const widgetRef = this;
-    if (this.props.selectArry != "") {
-      this.props.selectArry.map(function(singleSelect) {
+    const {shouldShow, toggleSidebar, selectArry} = widgetRef.props;
+    
+    let selectList = [];
+    if (selectArry != "") {
+      selectArry.map(function(singleSelect) {
         const singleRow = (
+            <div
+            key={singleSelect.key}
+            >
           <button
             style={{
-              display: "block"
+              display: "inline-block"
             }}
-            key={singleSelect.key}
-            onClick={(e) => {widgetRef.hideOrShowBar(singleSelect.func())}}
+            onClick={(e) => singleSelect.func()}
           >
             {singleSelect.key}
           </button>
+          </div>
         )
         selectList.push(singleRow);
       })
     }
 		return (
       <div
-        ref={ (c) => {this._sideBarRef = c}}
-        style={{
-          width: "135px",
-          position: "fixed",
-          left: (this.state.show ? "0px" : "-135px"),
-          top: 0,
-          bottom: 0,
-          transition: "1s",
-          zIndex: "999",
-          background: "burlywood"
-        }}
+        ref={ (c) => {widgetRef._sideBarRef = c}}
+        style={
+          Object.assign({ left: (shouldShow ? "-20px" : "-155px") }, widgetRef.styles.sideBarWrapper)
+        }
       >
         <button
-          style={this.styles.btn}
-          onClick={ (e) => { this.onContleClicked() }}
+          style={widgetRef.styles.btn}
+          onClick={ (e) => { toggleSidebar() }}
         >
           Contle
         </button>
-        <div style={this.styles.sideBarMainWrapper}>
-          <div style={this.styles.logo}>
+        <div style={widgetRef.styles.sideBarMainWrapper}>
+          <div style={widgetRef.styles.logo}>
             <img src="./favicon.ico" />
           </div>
           <div>

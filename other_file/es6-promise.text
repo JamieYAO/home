@@ -1,0 +1,22 @@
+1.Why is promise invented? What is inconvenient WITHOUT it?
+
+所谓Promise，简单说就是一个容器，里面保存着某个未来才会结束的事件（通常是一个异步操作）的结果。
+能够优雅的处理单线程异步请求问题。
+
+2.Is there any code snippet within a promise constructor executed IMMEDIATELY?
+
+是的，在 promise constructor 时会立刻执行除resolve,reject之外的代码。
+
+3.What's the limitation of passing parameter(s) to the then method by resolve?
+
+只能传入一个参数。
+(当返回值不是从 .then(onFulfilled, onRejected) 的 onFulfilled, onRejected 所返回的 Promise 时，它会自动包装为 resolve 过的 Promise 作为返回值。)
+
+4.What's the return type of a catch-block in a promise chain?
+
+Promise对象。
+
+5.Is it good to use multiple INTERLEAVING catch-blocks in a promise chain? 
+
+
+不好，使用catch-blocks不能打断/暂停promise chain.
