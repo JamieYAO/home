@@ -8,7 +8,7 @@ const React = require('react');
 const Component = React.Component;
 
 // import MarkdownEditor from "../widget/MarkdownEditor";
-import NoteScene from "./NoteScene";
+import NoteEditScene from "./NoteEditScene";
 import ArticleScene from "./ArticleScene";
 import SideBar from "../widget/SideBar";
 import constants from "../widget/constants";

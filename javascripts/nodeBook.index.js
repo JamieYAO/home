@@ -28,8 +28,8 @@ class App extends Component {
 
 	render() {
 		return (
-      <MainScene />
-    );
+			<MainScene />
+		);
 	}
 }
 
